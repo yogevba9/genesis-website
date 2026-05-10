@@ -849,7 +849,7 @@ nav {
   <h2 class="sec-title">GENESIS <span class="hl">בפעולה</span></h2>
   <p class="sec-desc">צפה במערכת GENESIS סוחרת בזמן אמת — כניסות מדויקות, ניהול סיכונים חכם ויציאות אוטומטיות.</p>
   <div class="video-wrap fu">
-    <video autoplay muted loop playsinline controls>
+    <video id="mainVideo" autoplay muted loop playsinline controls>
       <source id="videoSrc" type="video/mp4">
     </video>
   </div>
@@ -996,11 +996,6 @@ nav {
       <div class="t-card"><div class="stars">★★★★★</div><div class="q-icon">"</div><p class="t-text">בעלת עסק קטן, חיפשתי הכנסה פסיבית אמיתית. GENESIS נתנה לי בדיוק את זה. הרווחים קבועים והמערכת יציבה.</p><div class="t-foot"><div class="ava">נע</div><div><div class="t-name">נעמי פרידמן</div><div class="t-role">בעלת עסק, פתח תקווה</div></div></div></div>
       <div class="t-card"><div class="stars">★★★★★</div><div class="q-icon">"</div><p class="t-text">כמה שנים ניסיתי לסחור בעצמי והפסדתי הרבה. עם GENESIS הפסקתי לנחש ונתתי למערכת לעשות את העבודה. שינוי חיים.</p><div class="t-foot"><div class="ava">יו</div><div><div class="t-name">יובל שפירא</div><div class="t-role">הנדסאי, באר שבע</div></div></div></div>
       <div class="t-card"><div class="stars">★★★★★</div><div class="q-icon">"</div><p class="t-text">הטלגרם של GENESIS הוא כמו הצצה לפעולה בזמן אמת. אתה רואה כל עסקה, כל רווח — שקיפות מלאה שנותנת ביטחון עצום.</p><div class="t-foot"><div class="ava">גל</div><div><div class="t-name">גל ביטון</div><div class="t-role">מתכנת, הרצליה</div></div></div></div>
-      <!-- duplicate for loop -->
-      <div class="t-card"><div class="stars">★★★★★</div><div class="q-icon">"</div><p class="t-text">התחלתי עם 10 ימי הניסיון ופשוט לא הסתיים — הפכתי ללקוח קבוע. המערכת עובדת בזמן שאני ישן ואני מתעורר לרווחים. פשוט מדהים.</p><div class="t-foot"><div class="ava">אי</div><div><div class="t-name">איתי מזרחי</div><div class="t-role">סוחר עצמאי, תל אביב</div></div></div></div>
-      <div class="t-card"><div class="stars">★★★★★</div><div class="q-icon">"</div><p class="t-text">ניסיתי עשרות רובוטי מסחר לפני GENESIS — אף אחד לא היה קרוב לזה. הדראו דאון הנמוך ממש מרשים אותי.</p><div class="t-foot"><div class="ava">רו</div><div><div class="t-name">רועי בן-דוד</div><div class="t-role">מנהל תיקים, ירושלים</div></div></div></div>
-      <div class="t-card"><div class="stars">★★★★★</div><div class="q-icon">"</div><p class="t-text">אני סוחרת מזה 3 שנים ולא ראיתי מערכת שמחזיקה רווחים כל כך עקביים. 7 ימי ניסיון חינם — לא הייתי מאמינה אלמלא חוויתי בעצמי.</p><div class="t-foot"><div class="ava">שי</div><div><div class="t-name">שיר לוי</div><div class="t-role">סוחרת פורקס, חיפה</div></div></div></div>
-      <div class="t-card"><div class="stars">★★★★★</div><div class="q-icon">"</div><p class="t-text">כמה שנים ניסיתי לסחור בעצמי והפסדתי הרבה. עם GENESIS הפסקתי לנחש ונתתי למערכת לעשות את העבודה. שינוי חיים.</p><div class="t-foot"><div class="ava">יו</div><div><div class="t-name">יובל שפירא</div><div class="t-role">הנדסאי, באר שבע</div></div></div></div>
     </div>
   </div>
 </section>
@@ -1120,29 +1115,16 @@ document.addEventListener('click',e=>{
   } catch(e){ console.warn('Video blob error',e); }
 })();
 </script><script>
-(function(){
-  var track = document.querySelector('.carousel-track');
-  if(!track) return;
-  // Clone all cards for infinite loop
-  var cards = track.querySelectorAll('.t-card');
-  cards.forEach(function(c){ track.appendChild(c.cloneNode(true)); });
-  var totalW = 0;
-  var isPaused = false;
-  track.querySelectorAll('.t-card').forEach(function(c){ totalW += c.offsetWidth + 20; });
-  var pos = 0;
-  var speed = 0.5;
-  var halfW = totalW / 2;
-  document.querySelector('.carousel').addEventListener('mouseenter', function(){ isPaused = true; });
-  document.querySelector('.carousel').addEventListener('mouseleave', function(){ isPaused = false; });
-  function step(){
-    if(!isPaused) {
-      pos += speed;
-      if(pos >= halfW) pos -= halfW;
-      track.style.transform = 'translateX(-' + pos + 'px)';
-    }
-    requestAnimationFrame(step);
-  }
+window.addEventListener('load',function(){
+  var track=document.querySelector('.carousel-track');
+  if(!track)return;
+  var orig=Array.from(track.children);
+  orig.forEach(function(c){track.appendChild(c.cloneNode(true));});
+  var isPaused=false,pos=0,halfW=track.scrollWidth/2;
+  document.querySelector('.carousel').addEventListener('mouseenter',function(){isPaused=true;});
+  document.querySelector('.carousel').addEventListener('mouseleave',function(){isPaused=false;});
+  function step(){if(!isPaused){pos+=0.6;if(pos>=halfW)pos-=halfW;track.style.transform='translateX(-'+pos+'px)';}requestAnimationFrame(step);}
   requestAnimationFrame(step);
-})();
+});
 </script></body>
 </html>
