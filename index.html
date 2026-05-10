@@ -411,6 +411,7 @@ nav {
 .carousel {
   max-width:1160px; margin:0 auto;
   overflow:hidden; position:relative;
+  direction:ltr;
 }
 .carousel::before, .carousel::after {
   content:''; position:absolute; top:0; bottom:0; width:60px; z-index:2; pointer-events:none;
@@ -421,8 +422,10 @@ nav {
   display:flex; gap:20px;
   direction:ltr;
   width:max-content;
-  will-change:transform;
+  animation:marquee 30s linear infinite;
 }
+.carousel:hover .carousel-track { animation-play-state:paused; }
+@keyframes marquee { 0%{transform:translateX(0)} 100%{transform:translateX(-2560px)} }
 .t-card {
   width:300px; flex-shrink:0;
   background:var(--card);
@@ -1110,29 +1113,5 @@ document.addEventListener('click',e=>{
   }
 });
 </script>
-<script>
-window.addEventListener('load', function() {
-  var track = document.querySelector('.carousel-track');
-  var carousel = document.querySelector('.carousel');
-  if (!track || !carousel) return;
-
-  var pos = 0;
-  var speed = 0.5;
-  var paused = false;
-  var halfW = track.scrollWidth / 2;
-
-  carousel.addEventListener('mouseenter', function() { paused = true; });
-  carousel.addEventListener('mouseleave', function() { paused = false; });
-
-  function tick() {
-    if (!paused) {
-      pos += speed;
-      if (pos >= halfW) pos -= halfW;
-      track.style.transform = 'translateX(-' + pos + 'px)';
-    }
-    requestAnimationFrame(tick);
-  }
-  tick();
-});
-</script></body>
+</body>
 </html>
