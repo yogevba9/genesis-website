@@ -420,11 +420,9 @@ nav {
 .carousel-track {
   display:flex; gap:20px;
   direction:ltr;
-  animation:scroll 28s linear infinite;
   width:max-content;
+  will-change:transform;
 }
-.carousel:hover .carousel-track { animation-play-state:paused; }
-@keyframes scroll { 0%{transform:translateX(0)} 100%{transform:translateX(-50%)} }
 .t-card {
   width:300px; flex-shrink:0;
   background:var(--card);
@@ -1112,5 +1110,29 @@ document.addEventListener('click',e=>{
   }
 });
 </script>
-</body>
+<script>
+window.addEventListener('load', function() {
+  var track = document.querySelector('.carousel-track');
+  var carousel = document.querySelector('.carousel');
+  if (!track || !carousel) return;
+
+  var pos = 0;
+  var speed = 0.5;
+  var paused = false;
+  var halfW = track.scrollWidth / 2;
+
+  carousel.addEventListener('mouseenter', function() { paused = true; });
+  carousel.addEventListener('mouseleave', function() { paused = false; });
+
+  function tick() {
+    if (!paused) {
+      pos += speed;
+      if (pos >= halfW) pos -= halfW;
+      track.style.transform = 'translateX(-' + pos + 'px)';
+    }
+    requestAnimationFrame(tick);
+  }
+  tick();
+});
+</script></body>
 </html>
